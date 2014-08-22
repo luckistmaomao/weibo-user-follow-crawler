@@ -1,0 +1,10 @@
+db:
+    dbname: sample_spaq_zf
+    host: 114.212.191.119
+    port: 27017
+
+login:
+    - username: luckistmaomao@gmail.com
+      password: yzt112233zhang
+
+cookie_file: weibo_login_cookies.dat
