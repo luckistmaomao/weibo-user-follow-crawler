@@ -51,11 +51,7 @@ def get_info(uid,proxy_ip=''):
             try:
                 url = 'http://weibo.com/' + uid + '/info'
                 if proxy_ip =='':
-                    cookies = get_cookie(COOKIE_FILE)                
-                    r = requests.get(url, cookies=cookies, headers=http_headers,timeout=7)
-                    html = r.content
-                    with open('data/'+str(random.randint(1,100))+'.html','a') as f:
-                        f.write(html)
+                    html = urlfetch(url)
                 else:
                     proxies = {"http":"http://" + proxy_ip}
                     cookies = get_cookie(COOKIE_FILE)                
@@ -63,7 +59,6 @@ def get_info(uid,proxy_ip=''):
                     html = r.content
                     with open('data/'+str(random.randint(1,100))+'.html','a') as f:
                         f.write(html)
-#                html = urlfetch(url)
             except URLError:
                 log.error("URLError! - url: %s" % url)
                 time.sleep(randint(1, MAXSLEEPINGTIME))
@@ -105,9 +100,7 @@ def get_follows(uid,proxy_ip=''):
                 try:
                     url = 'http://weibo.com/' + uid + '/follow?page=' + str(page+1)
                     if proxy_ip =='':
-                        cookies = get_cookie(COOKIE_FILE)                
-                        r = requests.get(url, cookies=cookies, headers=http_headers)
-                        html = r.content
+                        html = urlfetch(url)
                     else:
                         proxies = {"http":"http://" + proxy_ip}
                         cookies = get_cookie(COOKIE_FILE)                
