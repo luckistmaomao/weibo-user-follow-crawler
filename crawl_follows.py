@@ -20,7 +20,7 @@ try:
     from logger import Logger
     from errors import UnsuspectedPageStructError, JsonDataParsingError, URLError
     import storage
-    from getcookie import get_cookie
+    from getcookie import get_cookie,get_cookies
     import requests
     from my_exceptions import CountException
 except ImportError:
@@ -54,7 +54,7 @@ def get_info(uid,proxy_ip=''):
                     html = urlfetch(url)
                 else:
                     proxies = {"http":"http://" + proxy_ip}
-                    cookies = get_cookie(COOKIE_FILE)                
+                    cookies = get_cookie(COOKIE_FILE)
                     r = requests.get(url, cookies=cookies, headers=http_headers, proxies=proxies,timeout=7)
                     html = r.content
                     with open('data/'+str(random.randint(1,100))+'.html','a') as f:
@@ -103,7 +103,7 @@ def get_follows(uid,proxy_ip=''):
                         html = urlfetch(url)
                     else:
                         proxies = {"http":"http://" + proxy_ip}
-                        cookies = get_cookie(COOKIE_FILE)                
+                        cookies = get_cookie(COOKIE_FILE)
                         r = requests.get(url, cookies=cookies, headers=http_headers, proxies=proxies,timeout=7)
                         html = r.content
                 except URLError:

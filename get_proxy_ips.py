@@ -84,7 +84,7 @@ def getIPs_proxy_ru():
     IPs = []
     proxy_url = 'http://proxy.com.ru/gaoni'
     r = requests.get(proxy_url)
-    soup = BeautifulSoup(r.content)
+    soup = BeautifulSoup(r.content.decode('gbk'))
     html = str(soup)
     pattern = re.compile('共(\d+)页')
     total_page_num = int(pattern.findall(html)[0])
@@ -236,9 +236,9 @@ class ProxyIpManager(threading.Thread):
             try:
                 self.bad_ip_set.clear()
                 IPPool = getIPs()
-                for thread_id in range(60):   #40个线程验证ip有效性
+                for thread_id in range(40):   #40个线程验证ip有效性
                     ips = []
-                    for index in range(thread_id,len(IPPool),60):
+                    for index in range(thread_id,len(IPPool),40):
                         ips.append(IPPool[index])
                     #print 'ips',ips
                     verify_threads.append(ProxyVerifier("verify " + str(thread_id), ips, self))
@@ -247,9 +247,15 @@ class ProxyIpManager(threading.Thread):
                 self.tmp_ip_list = []
                
                 for verify_thread in verify_threads:
-                    verify_thread.start()
+                    try:
+                        verify_thread.start()
+                    except:
+                        pass
                 for verify_thread in verify_threads:
-                    verify_thread.join()
+                    try:
+                        verify_thread.join()
+                    except:
+                        pass
 
                 self.ip_list = self.tmp_ip_list
             except:

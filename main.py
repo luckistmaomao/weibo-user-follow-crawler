@@ -77,15 +77,16 @@ def main():
         db_uid_list.append(weibo_user.uid)
 
     uid_list = list(set(ori_uid_list)-set(db_uid_list))
+    length = len(uid_list)
 
-    for uid in uid_list[:900]:
+    for uid in uid_list[int(length*0.5):int(length*0.6)]:
         pool.user_queue.put(uid)
 
     proxy_ip_manager = ProxyIpManager()
     proxy_ip_manager.start()
     
     proxy_pool = ProxyThreadpool(30,get_follows,proxy_ip_manager)
-    for uid in uid_list[900:]:
+    for uid in uid_list[int(length*0.6):]:
         proxy_pool.user_queue.put(uid)
 
 if __name__ == "__main__":
