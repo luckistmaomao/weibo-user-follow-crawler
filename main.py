@@ -9,6 +9,7 @@ import time
 import threading
 import random
 import traceback
+from pymongo import MongoClient
 try:
     import storage
     from storage import WeiboUser,WaitCrawlUser,MicroBlog
@@ -64,7 +65,7 @@ class WeiboUserListManager(threading.Thread):
 
 
 def main():
-    pool = Threadpool(4,get_follows)
+    pool = Threadpool(5,get_follows)
     ori_uid_list = []
     db_uid_list = []
     uid_list = []
@@ -73,21 +74,26 @@ def main():
             line = line.strip()
             ori_uid_list.append(line)
 
-    for weibo_user in WeiboUser.objects:
-        db_uid_list.append(weibo_user.uid)
+
+    client = MongoClient('114.212.191.119')
+    db=client.sample_spaq_zf
+
+    for weibo_user in db.weibo_user.find():
+        db_uid_list.append(weibo_user['uid'])
+    client.close()
 
     uid_list = list(set(ori_uid_list)-set(db_uid_list))
     length = len(uid_list)
 
-    for uid in uid_list[int(length*0.5):int(length*0.6)]:
+    for uid in uid_list:
         pool.user_queue.put(uid)
 
-    proxy_ip_manager = ProxyIpManager()
-    proxy_ip_manager.start()
-    
-    proxy_pool = ProxyThreadpool(30,get_follows,proxy_ip_manager)
-    for uid in uid_list[int(length*0.6):]:
-        proxy_pool.user_queue.put(uid)
+#    proxy_ip_manager = ProxyIpManager()
+#    proxy_ip_manager.start()
+#    
+#    proxy_pool = ProxyThreadpool(30,get_follows,proxy_ip_manager)
+#    for uid in uid_list[int(length*0.6):]:
+#        proxy_pool.user_queue.put(uid)
 
 if __name__ == "__main__":
     main()

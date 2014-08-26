@@ -28,7 +28,7 @@ except ImportError:
     print s
 
 MAXTIMES2TRY = 3
-MAXSLEEPINGTIME = 5
+MAXSLEEPINGTIME = 15
 http_headers = {'User-Agent':'Mozilla/5.0 (X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0'}
 
 #log support
@@ -130,8 +130,9 @@ def get_follows(uid,proxy_ip=''):
                 if len(follows) == 0:
                     raise CountException
 
+        if len(follows) == 0:
+            return 
         user, create = storage.WeiboUser.objects.get_or_create(uid=uid)
-        user.info = info
         user.followees = follows
 
         user.save()

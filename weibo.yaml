@@ -4,7 +4,7 @@ db:
     port: 27017
 
 login:
-    - username: luckistmaomao@126.com
+    - username: yuzt@nlp.nju.edu.cn
       password: weibo112233
 
 cookie_file: weibo_login_cookies.dat
